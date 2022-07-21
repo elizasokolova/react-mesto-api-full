@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');

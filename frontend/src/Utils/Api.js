@@ -12,7 +12,9 @@ class Api {
     }
 
     getCurrentUser() {
-        return fetch(`${this._baseUrl}/users/me`, {headers: this._headers})
+        return fetch(`${this._baseUrl}/users/me`, {
+            credentials: 'include',
+            headers: this._headers})
             .then(this._checkResponse);
     }
 
@@ -20,18 +22,22 @@ class Api {
         return fetch(`${this._baseUrl}/users/me`, {
             method: 'PATCH',
             headers: this._headers,
+            credentials: 'include',
             body: JSON.stringify(data)
         }).then(this._checkResponse);
     }
 
     getInitialCards() {
-        return fetch(`${this._baseUrl}/cards`, {headers: this._headers})
+        return fetch(`${this._baseUrl}/cards`, {
+            credentials: 'include',
+            headers: this._headers})
             .then(this._checkResponse);
     }
 
     addNewCard(data) {
         return fetch(`${this._baseUrl}/cards`, {
             method: 'POST',
+            credentials: 'include',
             headers: this._headers,
             body: JSON.stringify(data)
         }).then(this._checkResponse);
@@ -40,6 +46,7 @@ class Api {
     deleteCard(id) {
         return fetch(`${this._baseUrl}/cards/${id}`, {
             method: 'DELETE',
+            credentials: 'include',
             headers: this._headers,
         }).then(this._checkResponse);
     }
@@ -47,6 +54,7 @@ class Api {
     addLike(id) {
         return fetch(`${this._baseUrl}/cards/${id}/likes`, {
             method: 'PUT',
+            credentials: 'include',
             headers: this._headers,
         }).then(this._checkResponse);
     }
@@ -54,6 +62,7 @@ class Api {
     deleteLike(id) {
         return fetch(`${this._baseUrl}/cards/${id}/likes`, {
             method: 'DELETE',
+            credentials: 'include',
             headers: this._headers,
         }).then(this._checkResponse);
     }
@@ -65,6 +74,7 @@ class Api {
     changeAvatar(data) {
         return fetch(`${this._baseUrl}/users/me/avatar`, {
             method: 'PATCH',
+            credentials: 'include',
             headers: this._headers,
             body: JSON.stringify({
                 avatar: data['avatar'],
@@ -74,9 +84,8 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-39',
+    baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`,
     headers: {
-        authorization: '6a5a6e79-9da9-4935-9ee4-fe9aaaefe451',
         'Content-Type': 'application/json'
     }
 });

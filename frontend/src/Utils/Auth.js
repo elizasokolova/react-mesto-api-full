@@ -25,6 +25,7 @@ class Auth {
     login(email, password) {
         return fetch(`${this._baseUrl}/signin`, {
             method: "POST",
+            credentials: 'include',
             headers: this._headers,
             body: JSON.stringify({
                 password: password,
@@ -42,16 +43,17 @@ class Auth {
     checkTokenValidity(jwt) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: "GET",
+            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
             },
-        }).then(this.checkResponse);
+        }).then((res) => this.checkResponse(res));
     }
 }
 
 const auth = new Auth({
-    baseUrl: 'https://auth.nomoreparties.co',
+    baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL || '//localhost:3001'}`,
     headers: {
         'Content-Type': 'application/json'
     }
