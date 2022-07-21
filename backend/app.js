@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
-
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
@@ -31,6 +30,7 @@ const options = {
 const { PORT = 3001 } = process.env;
 
 const app = express();
+
 app.use('*', cors(options));
 // app.use((req, res, next) => {
 //  res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
