@@ -22,7 +22,6 @@ const options = {
     'https://lizasokol.students.nomoredomains.xyz',
     'http://api.lizasokol.students.nomoredomains.xyz',
     'https://api.lizasokol.students.nomoredomains.xyz',
-    'https://localhost:3000',
     'https://elizasokolova.github.io',
   ],
   credentials: true,
@@ -46,7 +45,6 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
-app.use(cors);
 app.use(requestLogger);
 
 app.get('/crash-test', () => {

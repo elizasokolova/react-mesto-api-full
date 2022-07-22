@@ -128,6 +128,7 @@ export default function App() {
                         })
                         .catch((err => console.error(`Error: ${err}`)));
                 }
+        // eslint-disable-next-line
     }, []);
 
     function handleLogIn(email, password) {
