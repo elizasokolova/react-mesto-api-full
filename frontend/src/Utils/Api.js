@@ -4,6 +4,10 @@ class Api {
         this._headers = headers; // Токен пользователя
     }
 
+    _headersWithJwt() {
+        return {authorization: `Bearer ${localStorage.getItem('jwt')}`, ...this.headers}
+    }
+
     _checkResponse(response) {
         if (response.ok) {
             return response.json();
@@ -14,14 +18,14 @@ class Api {
     getCurrentUser() {
         return fetch(`${this._baseUrl}/users/me`, {
             credentials: 'include',
-            headers: this._headers})
+            headers: this._headersWithJwt()})
             .then(this._checkResponse);
     }
 
     updateCurrentUser(data) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: 'PATCH',
-            headers: this._headers,
+            headers: this._headersWithJwt(),
             credentials: 'include',
             body: JSON.stringify(data)
         }).then(this._checkResponse);
@@ -30,7 +34,7 @@ class Api {
     getInitialCards() {
         return fetch(`${this._baseUrl}/cards`, {
             credentials: 'include',
-            headers: this._headers})
+            headers: this._headersWithJwt()})
             .then(this._checkResponse);
     }
 
@@ -38,7 +42,7 @@ class Api {
         return fetch(`${this._baseUrl}/cards`, {
             method: 'POST',
             credentials: 'include',
-            headers: this._headers,
+            headers: this._headersWithJwt(),
             body: JSON.stringify(data)
         }).then(this._checkResponse);
     }
@@ -47,7 +51,7 @@ class Api {
         return fetch(`${this._baseUrl}/cards/${id}`, {
             method: 'DELETE',
             credentials: 'include',
-            headers: this._headers,
+            headers: this._headersWithJwt(),
         }).then(this._checkResponse);
     }
 
@@ -55,7 +59,7 @@ class Api {
         return fetch(`${this._baseUrl}/cards/${id}/likes`, {
             method: 'PUT',
             credentials: 'include',
-            headers: this._headers,
+            headers: this._headersWithJwt(),
         }).then(this._checkResponse);
     }
 
@@ -63,7 +67,7 @@ class Api {
         return fetch(`${this._baseUrl}/cards/${id}/likes`, {
             method: 'DELETE',
             credentials: 'include',
-            headers: this._headers,
+            headers: this._headersWithJwt(),
         }).then(this._checkResponse);
     }
 
@@ -75,7 +79,7 @@ class Api {
         return fetch(`${this._baseUrl}/users/me/avatar`, {
             method: 'PATCH',
             credentials: 'include',
-            headers: this._headers,
+            headers: this._headersWithJwt(),
             body: JSON.stringify({
                 avatar: data['avatar'],
             })
@@ -84,11 +88,11 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL}`,
+    baseUrl: `${window.location.protocol}${'//localhost:3001' || process.env.REACT_APP_API_URL }`,
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
     }
 });
 
-window.api = api;
 export default api;

@@ -15,6 +15,7 @@ class Auth {
         return fetch(`${this._baseUrl}/signup`, {
             method: "POST",
             headers: this._headers,
+            credentials: 'include',
             body: JSON.stringify({
                 email: email,
                 password: password,
@@ -22,11 +23,14 @@ class Auth {
         }).then(this.checkResponse);
     }
 
-    login(email, password) {
+    login(email, password, jwt) {
         return fetch(`${this._baseUrl}/signin`, {
             method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${jwt}`,
+            },
             credentials: 'include',
-            headers: this._headers,
             body: JSON.stringify({
                 password: password,
                 email: email,
@@ -43,7 +47,6 @@ class Auth {
     checkTokenValidity(jwt) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: "GET",
-            credentials: 'include',
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${jwt}`,
@@ -53,11 +56,10 @@ class Auth {
 }
 
 const auth = new Auth({
-    baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL}`,
+    baseUrl: `${window.location.protocol}${'//localhost:3001' || process.env.REACT_APP_API_URL }`,
     headers: {
         'Content-Type': 'application/json'
     }
 });
 
-window.auth = auth;
 export default auth;
