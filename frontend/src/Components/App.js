@@ -9,7 +9,7 @@ import DeleteCardPopup from "./DeleteCardPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ImagePopup from "./ImagePopup";
 import api from "../Utils/Api";
-import auth from "../Utils/Auth";
+import * as auth from "../Utils/Auth";
 import {CurrentUserContext} from "../Contexts/CurrentUserContext";
 import { Route, Switch, Redirect, useHistory } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
@@ -76,6 +76,7 @@ export default function App() {
         isLogin && api.getInitialCards()
             .then(setCards)
             .catch(err => console.error(`Error: ${err}`));
+        // eslint-disable-next-line
     }, [isLogin]);
 
     useEffect(() => {
@@ -85,6 +86,7 @@ export default function App() {
                 setCurrentUser(user);
             })
             .catch(err => console.error(`Error: ${err}`));
+        // eslint-disable-next-line
     }, [isLogin]);
 
     useEffect(() => {
@@ -134,7 +136,7 @@ export default function App() {
     }
 
     function handleLogIn(email, password) {
-        auth
+        return auth
             .login(email, password)
             .then(data => {
                 data.token &&
@@ -151,7 +153,7 @@ export default function App() {
     }
 
     function handleRegistration(email, password) {
-        auth
+        return auth
             .register(email, password)
             .then(() => {
                 setIsInfoToolTipPopupOpen(true);

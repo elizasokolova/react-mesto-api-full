@@ -88,7 +88,7 @@ class Api {
 }
 
 const api = new Api({
-    baseUrl: `${window.location.protocol}${'//localhost:3001' || process.env.REACT_APP_API_URL }`,
+    baseUrl: `${window.location.protocol}${process.env.REACT_APP_API_URL }`,
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
