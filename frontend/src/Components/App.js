@@ -47,7 +47,7 @@ export default function App() {
             .catch(err => console.error(`Error: ${err}`));
     }
 
-    function handleCardDelete(card) {
+    function handleCardDelete() {
         api.deleteCard(cardToDelete._id)
             .then(() => {
                 setCards((oldCards) => oldCards.filter((oldCard) => oldCard._id !== cardToDelete._id))
@@ -119,7 +119,7 @@ export default function App() {
     useEffect(() => {
         // проверка токена в хранилище браузера localStorage
         if (localStorage.getItem("jwt")) {
-            const jwt = localStorage.getItem("jwt");
+            let jwt = localStorage.getItem("jwt");
                 jwt && auth.checkTokenValidity(jwt)
                         .then((data) => {
                             setIsLogin(true);

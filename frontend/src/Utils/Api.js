@@ -5,7 +5,7 @@ class Api {
     }
 
     _headersWithJwt() {
-        return {authorization: `Bearer ${localStorage.getItem('jwt')}`, ...this.headers}
+        return {authorization: `Bearer ${localStorage.getItem('jwt')}`, ...this._headers}
     }
 
     _checkResponse(response) {
