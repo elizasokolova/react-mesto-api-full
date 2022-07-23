@@ -27,18 +27,33 @@ export default function App() {
     const [cardToDelete, setCardToDelete]= React.useState(null);
     const [isRegistered, setIsRegistered] = React.useState(false);
     const [isLogin, setIsLogin] = React.useState(false);
-    const [email, setEmail] = React.useState(null);
+    const [userData, setUserData] = React.useState([]);
     const history = useHistory();
 
-    const [currentUser, setCurrentUser] = React.useState({
-        name: '',
-        about: ''
-    });
+    const [currentUser, setCurrentUser] = React.useState({});
     const [cards, setCards] = React.useState([]);
+
+    function tokenCheck() {        // проверка токена в хранилище браузера localStorage
+        if (localStorage.getItem("jwt")) {
+            let jwt = localStorage.getItem("jwt");
+            auth.checkTokenValidity(jwt)
+                .then((data) => {
+                    if (data) {
+                        const userData = {
+                            email: data.email,
+                        };
+                        setIsLogin(true);
+                        setUserData(userData.email);
+                        history.push("/");
+                    }
+                })
+                .catch((err => console.error(`Error: ${err}`)));
+        }
+    }
 
     function handleCardLike(card) {
         // Снова проверяем, есть ли уже лайк на этой карточке
-        const isLiked = card.likes.some(user => user._id === currentUser._id);
+        const isLiked = card.likes.some(user => user === currentUser._id);
         // Отправляем запрос в API и получаем обновлённые данные карточки
         api.changeLikeCardStatus(card._id, !isLiked)
             .then((newCard) => setCards((oldCards) =>
@@ -57,12 +72,14 @@ export default function App() {
     }
 
     useEffect(() => {
+        tokenCheck();
         isLogin && api.getInitialCards()
             .then(setCards)
             .catch(err => console.error(`Error: ${err}`));
     }, [isLogin]);
 
     useEffect(() => {
+        tokenCheck();
         isLogin && api.getCurrentUser()
             .then((user) => {
                 setCurrentUser(user);
@@ -116,21 +133,6 @@ export default function App() {
             .catch((err => console.error(`Error: ${err}`)))
     }
 
-    useEffect(() => {
-        // проверка токена в хранилище браузера localStorage
-        if (localStorage.getItem("jwt")) {
-            let jwt = localStorage.getItem("jwt");
-                jwt && auth.checkTokenValidity(jwt)
-                        .then((data) => {
-                            setIsLogin(true);
-                            setEmail(data.data.email);
-                            history.push("/");
-                        })
-                        .catch((err => console.error(`Error: ${err}`)));
-                }
-        // eslint-disable-next-line
-    }, []);
-
     function handleLogIn(email, password) {
         auth
             .login(email, password)
@@ -138,8 +140,8 @@ export default function App() {
                 data.token &&
                 localStorage.setItem("jwt", data.token);
                 setIsLogin(true);
-                setEmail(email);
                 history.push("/");
+                tokenCheck();
             })
             .catch(err => {
                 console.error(`Error: ${err}`)
@@ -178,7 +180,7 @@ export default function App() {
     return (
         <CurrentUserContext.Provider value={currentUser}>
             <>
-            <Header email={email} logOut={handleLogOut} />
+            <Header email={userData} logOut={handleLogOut} />
             <Switch>
                 <ProtectedRoute
                     exact path="/"
@@ -194,7 +196,7 @@ export default function App() {
                     onCardDeleteConfirm={handleDeleteCardClick}
                 />
                 <Route path="/signin">
-                    <Login onLogin={handleLogIn} />
+                    <Login onLogin={handleLogIn} tokenCheck={tokenCheck} />
                 </Route>
                 <Route path="/signup">
                     <Register onRegister={handleRegistration} />
